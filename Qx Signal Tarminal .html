@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TraderParvej — Quotex Signal Terminal</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0f17;
+  --panel-bg:rgba(0,0,0,0.6);
+  --accent:#00ffd1;
+  --accent2:#32a89f;
+  --danger:#ff4c4c;
+  --text:#eafdf7;
+  --text-muted:#7ab9c5;
+  --glow:rgba(0,255,209,0.3);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:"Poppins",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  justify-content:center;
+  padding:20px;
+}
+.dashboard{max-width:1100px;width:100%;}
+.header{text-align:center;margin-bottom:24px;}
+.header h1{
+  font-size:28px;
+  color:var(--accent);
+  text-shadow:0 0 8px var(--accent),0 0 16px var(--accent2);
+}
+.header p{font-size:14px;color:var(--text-muted);}
+.layout{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:20px;
+}
+.chart-panel{background:var(--panel-bg);border-radius:16px;padding:16px;box-shadow:0 0 25px var(--glow) inset;}
+canvas{width:100% !important;height:auto !important;}
+.control-panel{display:flex;flex-direction:column;gap:20px;}
+.card{background:var(--panel-bg);border-radius:16px;padding:16px;box-shadow:0 0 20px var(--glow) inset;}
+.card label{display:block;margin-bottom:6px;font-weight:600;font-size:13px;color:var(--text-muted);}
+.card select,.card input[type="time"]{
+  width:100%;padding:10px;border-radius:8px;background:rgba(10,15,25,0.9);
+  color:var(--accent);font-weight:600;border:none;margin-bottom:14px;box-shadow:inset 0 0 10px var(--glow);
+}
+#pair{height:120px;}
+.controls{display:flex;gap:10px;flex-wrap:wrap;}
+button.primary{
+  flex:1;padding:12px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  border:none;border-radius:12px;font-weight:700;color:#000;cursor:pointer;
+  box-shadow:0 0 18px var(--accent),0 0 30px var(--accent2);
+  transition:transform .18s,box-shadow .18s;
+}
+button.primary:hover{transform:scale(1.05);box-shadow:0 0 24px var(--accent2),0 0 40px var(--accent);}
+button.ghost{
+  flex:1;padding:12px;background:transparent;border:1px solid rgba(255,255,255,0.1);
+  color:var(--text-muted);border-radius:12px;cursor:pointer;
+}
+.resultArea{
+  background:rgba(0,0,0,0.35);
+  border-radius:12px;
+  min-height:200px;padding:12px;overflow:auto;
+  border:1px solid rgba(255,255,255,0.05);
+  box-shadow:0 0 16px var(--glow) inset;
+}
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px;}
+th,td{padding:8px;text-align:center;}
+th{color:var(--accent);border-bottom:1px solid rgba(255,255,255,0.1);}
+td.buy{color:#7cffb2;font-weight:700;}
+td.sell{color:var(--danger);font-weight:700;}
+.actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+.copyBtn{
+  flex:1;padding:10px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  color:#000;border-radius:10px;cursor:pointer;font-weight:700;
+  box-shadow:0 0 18px var(--accent);
+}
+.copyBtn:hover{transform:scale(1.03);}
+
+/* Notification popup style */
+.notification{
+  position:fixed;
+  bottom:-120px;
+  right:20px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#000;
+  padding:18px 24px;
+  border-radius:16px;
+  font-weight:700;
+  box-shadow:0 8px 25px rgba(0,0,0,0.4);
+  transition:0.5s all;
+  cursor:pointer;
+  z-index:9999;
+  max-width:300px;
+  text-align:center;
+  font-size:14px;
+}
+.notification.show{
+  bottom:20px;
+  animation: slideUp 0.5s ease-in-out;
+}
+@keyframes slideUp{
+  0%{opacity:0; transform:translateY(40px);}
+  100%{opacity:1; transform:translateY(0);}
+}
+.notification a{color:#000;font-weight:700;text-decoration:none;}
+
+/* Responsive */
+@media(max-width:950px){
+  .layout{grid-template-columns:1fr;}
+}
+@media(max-width:500px){
+  .controls{flex-direction:column;}
+  .actions{flex-direction:column;}
+  #pair{height:100px;}
+}
+</style>
+</head>
+<body>
+
+<div class="dashboard">
+  <div class="header">
+    <h1>TraderParvej</h1>
+    <p>Quotex Signal Terminal</p>
+  </div>
+
+  <div class="layout">
+    <div class="chart-panel">
+      <canvas id="priceChart"></canvas>
+    </div>
+
+    <div class="control-panel">
+      <div class="card">
+        <label>Select Pair</label>
+        <select id="pair" multiple>
+          <option>EUR/USD</option>
+          <option>EUR/GBP</option>
+          <option>EUR/JPY</option>
+          <option>USD/JPY</option>
+        </select>
+
+        <label>Select Strategy</label>
+        <select id="strategy">
+          <option>Candle Master</option>
+          <option>Trend Rider</option>
+          <option>AI Smart Zone</option>
+          <option>Reversal Hunter</option>
+        </select>
+
+        <div style="display:flex; gap:10px;flex-wrap:wrap;">
+          <div style="flex:1;">
+            <label>Trade Duration</label>
+            <select id="tradeTime">
+              <option value="1">1 Min</option>
+              <option value="2">2 Min</option>
+              <option value="5">5 Min</option>
+            </select>
+          </div>
+          <div style="width:140px;">
+            <label>Signal Count</label>
+            <select id="count">
+              <option>3</option><option>4</option><option>5</option><option>6</option>
+              <option>8</option><option>10</option><option>12</option>
+            </select>
+          </div>
+        </div>
+
+        <label>Start Time</label>
+        <input type="time" id="startTime">
+
+        <div class="controls">
+          <button class="primary" onclick="generateSignals()">Generate Signals</button>
+          <button class="ghost" onclick="clearResult()">Clear</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div id="resultArea" class="resultArea">No signals yet — press Generate Signals.</div>
+        <div class="actions">
+          <button class="copyBtn" onclick="copyForTelegram()">Copy For Telegram</button>
+          <button class="ghost" onclick="clearResult()">Clear</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="telegramNotification" class="notification"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const pad = n => String(n).padStart(2,'0');
+
+const ctx = document.getElementById('priceChart').getContext('2d');
+const chartData = {labels:[], datasets:[{label:'Price', data:[], borderColor:'#00ffd1', backgroundColor:'rgba(0,255,209,0.2)', tension:0.3}]};
+const priceChart = new Chart(ctx,{type:'line',data:chartData,options:{animation:false,responsive:true,scales:{x:{display:true},y:{display:true}},plugins:{legend:{display:false}}}});
+
+function addRandomPricePoint(){
+  const now = new Date();
+  const hh = pad(now.getHours()), mm = pad(now.getMinutes()), ss = pad(now.getSeconds());
+  const label = `${hh}:${mm}:${ss}`;
+  const last = chartData.datasets[0].data.slice(-1)[0] || 100;
+  const change = (Math.random()-0.5)*0.5;
+  const newPrice = +(last+change).toFixed(2);
+  chartData.labels.push(label);
+  chartData.datasets[0].data.push(newPrice);
+  if(chartData.labels.length>30){ chartData.labels.shift(); chartData.datasets[0].data.shift(); }
+  priceChart.update();
+}
+setInterval(addRandomPricePoint,2000);
+addRandomPricePoint();
+
+function addMinutesRandom(timeStr,minGap=5,maxGap=9){
+  const [hh,mm] = timeStr.split(':').map(Number);
+  const d=new Date(); d.setHours(hh,mm,0,0);
+  const gap = Math.floor(Math.random()*(maxGap-minGap+1))+minGap;
+  d.setMinutes(d.getMinutes()+gap);
+  return pad(d.getHours())+':'+pad(d.getMinutes());
+}
+
+function generateSignals(){
+  const pairSelect = document.getElementById('pair');
+  const selectedPairs = Array.from(pairSelect.selectedOptions).map(o=>o.value);
+  if(selectedPairs.length===0){ alert('Select at least one pair'); return; }
+  const strategy = document.getElementById('strategy').value;
+  const count = parseInt(document.getElementById('count').value) || 3;
+  let curTime = document.getElementById('startTime').value;
+  if(!curTime){ alert('Select a start time.'); return; }
+  const signals = [];
+
+  if(strategy==='Reversal Hunter'){
+    const half = Math.floor(count/2), extra = count%2;
+    let types=[];
+    for(let i=0;i<half;i++){types.push('BUY','SELL');}
+    if(extra>0) types.push(Math.random()>0.5?'BUY':'SELL');
+    types.sort(()=>Math.random()-0.5);
+    for(let i=0;i<count;i++){
+      if(i>0) curTime=addMinutesRandom(curTime,5,9);
+      const pair = selectedPairs[i % selectedPairs.length];
+      signals.push({id:i+1, pair, time:curTime, type:types[i]});
+    }
+  } else {
+    for(let i=0;i<count;i++){
+      if(i>0) curTime=addMinutesRandom(curTime,5,9);
+      const pair = selectedPairs[i % selectedPairs.length];
+      const type=Math.random()>0.5?'BUY':'SELL';
+      signals.push({id:i+1, pair, time:curTime, type});
+    }
+  }
+  window.generatedSignals = signals;
+  renderSignals(signals);
+  showTelegramNotification();
+}
+
+function renderSignals(signals){
+  if(!signals||signals.length===0){ document.getElementById('resultArea').innerHTML='No signals generated.'; return; }
+  let html='<table><thead><tr><th>#</th><th>PAIR</th><th>TIME</th><th>SIGNAL</th></tr></thead><tbody>';
+  signals.forEach(s=>html+=`<tr><td>${s.id}</td><td>${s.pair}</td><td>${s.time}</td><td class="${s.type==='BUY'?'buy':'sell'}">${s.type}</td></tr>`);
+  html+='</tbody></table>';
+  document.getElementById('resultArea').innerHTML=html;
+  document.getElementById('resultArea').scrollTop=document.getElementById('resultArea').scrollHeight;
+}
+
+function clearResult(){
+  document.getElementById('resultArea').innerHTML='No signals yet — press Generate Signals.';
+  window.generatedSignals = null;
+}
+
+function copyForTelegram(){
+  const signals = window.generatedSignals;
+  if(!signals||signals.length===0){ alert('Generate signals first'); return; }
+  const header='💥 HIGH ACURANCY⚡️\n\n⚙️FUTURE SIGNAL ⚙️\n\n‼️1 Min Trade — 1 Step MTG\n⚡️ USE SAFETY FOR BETTER ACCURACY ⚡️\n\n🔔 USE BDT TIMEZONE\n';
+  let lines=[header];
+  signals.forEach(s=>lines.push(`${s.time} – ${s.pair} – ${s.type}`));
+  lines.push('\nFor Any Question:\n@TraderParvej');
+  navigator.clipboard.writeText(lines.join('\n')).then(()=>showCopyNotification());
+}
+
+function showTelegramNotification(){
+  const notif=document.getElementById('telegramNotification');
+  notif.innerHTML=`<strong>Join My Telegram Channel</strong><br><a href="https://t.me/TraderParvej_Community" target="_blank">https://t.me/TraderParvej_Community</a>`;
+  notif.classList.add('show');
+  notif.onclick=()=>window.open('https://t.me/TraderParvej_Community','_blank');
+  setTimeout(()=>{notif.classList.remove('show');},9000);
+}
+
+function showCopyNotification(){
+  const notif=document.getElementById('telegramNotification');
+  notif.innerHTML=`✅ Copied to Clipboard`;
+  notif.classList.add('show');
+  setTimeout(()=>{notif.classList.remove('show');},2500);
+}
+</script>
+</body>
+</html>
