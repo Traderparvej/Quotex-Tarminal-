@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TraderParvej — Quotex Signal Terminal</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
 <style>
 :root{
   --bg:#0a0f17;
@@ -16,7 +17,9 @@
   --text-muted:#7ab9c5;
   --glow:rgba(0,255,209,0.3);
 }
+
 *{margin:0;padding:0;box-sizing:border-box;}
+
 body{
   font-family:"Poppins",sans-serif;
   background:var(--bg);
@@ -25,30 +28,59 @@ body{
   justify-content:center;
   padding:20px;
 }
+
 .dashboard{max-width:1100px;width:100%;}
 .header{text-align:center;margin-bottom:24px;}
+
 .header h1{
   font-size:28px;
   color:var(--accent);
   text-shadow:0 0 8px var(--accent),0 0 16px var(--accent2);
 }
 .header p{font-size:14px;color:var(--text-muted);}
+
 .layout{
   display:grid;
   grid-template-columns:2fr 1fr;
   gap:20px;
 }
-.chart-panel{background:var(--panel-bg);border-radius:16px;padding:16px;box-shadow:0 0 25px var(--glow) inset;}
-canvas{width:100% !important;height:auto !important;}
-.control-panel{display:flex;flex-direction:column;gap:20px;}
-.card{background:var(--panel-bg);border-radius:16px;padding:16px;box-shadow:0 0 20px var(--glow) inset;}
-.card label{display:block;margin-bottom:6px;font-weight:600;font-size:13px;color:var(--text-muted);}
-.card select,.card input[type="time"]{
-  width:100%;padding:10px;border-radius:8px;background:rgba(10,15,25,0.9);
-  color:var(--accent);font-weight:600;border:none;margin-bottom:14px;box-shadow:inset 0 0 10px var(--glow);
+
+.chart-panel{
+  background:var(--panel-bg);
+  border-radius:16px;
+  padding:16px;
+  box-shadow:0 0 25px var(--glow) inset;
 }
+
+canvas{width:100% !important;height:auto !important;}
+
+.control-panel{display:flex;flex-direction:column;gap:20px;}
+
+.card{
+  background:var(--panel-bg);
+  border-radius:16px;
+  padding:16px;
+  box-shadow:0 0 20px var(--glow) inset;
+}
+
+.card label{display:block;margin-bottom:6px;font-weight:600;font-size:13px;color:var(--text-muted);}
+
+.card select,.card input[type="time"]{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  background:rgba(10,15,25,0.9);
+  color:var(--accent);
+  font-weight:600;
+  border:none;
+  margin-bottom:14px;
+  box-shadow:inset 0 0 10px var(--glow);
+}
+
 #pair{height:120px;}
+
 .controls{display:flex;gap:10px;flex-wrap:wrap;}
+
 button.primary{
   flex:1;padding:12px;
   background:linear-gradient(90deg,var(--accent),var(--accent2));
@@ -56,24 +88,34 @@ button.primary{
   box-shadow:0 0 18px var(--accent),0 0 30px var(--accent2);
   transition:transform .18s,box-shadow .18s;
 }
-button.primary:hover{transform:scale(1.05);box-shadow:0 0 24px var(--accent2),0 0 40px var(--accent);}
+button.primary:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 24px var(--accent2),0 0 40px var(--accent);
+}
+
 button.ghost{
   flex:1;padding:12px;background:transparent;border:1px solid rgba(255,255,255,0.1);
   color:var(--text-muted);border-radius:12px;cursor:pointer;
 }
+
 .resultArea{
   background:rgba(0,0,0,0.35);
   border-radius:12px;
-  min-height:200px;padding:12px;overflow:auto;
+  min-height:200px;
+  padding:12px;
+  overflow:auto;
   border:1px solid rgba(255,255,255,0.05);
   box-shadow:0 0 16px var(--glow) inset;
 }
+
 table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px;}
 th,td{padding:8px;text-align:center;}
 th{color:var(--accent);border-bottom:1px solid rgba(255,255,255,0.1);}
 td.buy{color:#7cffb2;font-weight:700;}
 td.sell{color:var(--danger);font-weight:700;}
+
 .actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+
 .copyBtn{
   flex:1;padding:10px;
   background:linear-gradient(90deg,var(--accent),var(--accent2));
@@ -82,33 +124,52 @@ td.sell{color:var(--danger);font-weight:700;}
 }
 .copyBtn:hover{transform:scale(1.03);}
 
-/* Notification popup style */
+/* --------------------
+   NEW STYLISH NOTIFICATION
+--------------------- */
+
 .notification{
   position:fixed;
-  bottom:-120px;
+  bottom:-200px;
   right:20px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#000;
+  background:rgba(0,255,209,0.15);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
   padding:18px 24px;
-  border-radius:16px;
+  border-radius:18px;
   font-weight:700;
-  box-shadow:0 8px 25px rgba(0,0,0,0.4);
-  transition:0.5s all;
+  color:var(--accent);
+  border:1px solid rgba(0,255,209,0.4);
+  box-shadow:0 0 22px rgba(0,255,209,0.35), inset 0 0 18px rgba(0,255,209,0.20);
+  transition:0.55s ease;
   cursor:pointer;
-  z-index:9999;
+  z-index:99999;
   max-width:300px;
   text-align:center;
-  font-size:14px;
+  font-size:15px;
+  letter-spacing:0.3px;
 }
+
 .notification.show{
-  bottom:20px;
-  animation: slideUp 0.5s ease-in-out;
+  bottom:25px;
+  animation:smoothPop 0.55s ease;
 }
-@keyframes slideUp{
-  0%{opacity:0; transform:translateY(40px);}
-  100%{opacity:1; transform:translateY(0);}
+
+@keyframes smoothPop{
+  0%{opacity:0; transform:translateY(35px) scale(0.92);}
+  100%{opacity:1; transform:translateY(0px) scale(1);}
 }
-.notification a{color:#000;font-weight:700;text-decoration:none;}
+
+.notification:active{
+  box-shadow:0 0 26px rgba(0,255,209,0.65), inset 0 0 22px rgba(0,255,209,0.35);
+  transform:scale(0.97);
+}
+
+.notification a{
+  color:var(--accent);
+  text-decoration:none;
+  font-weight:700;
+}
 
 /* Responsive */
 @media(max-width:950px){
@@ -135,6 +196,7 @@ td.sell{color:var(--danger);font-weight:700;}
     </div>
 
     <div class="control-panel">
+
       <div class="card">
         <label>Select Pair</label>
         <select id="pair" multiple>
@@ -164,8 +226,9 @@ td.sell{color:var(--danger);font-weight:700;}
           <div style="width:140px;">
             <label>Signal Count</label>
             <select id="count">
-              <option>3</option><option>4</option><option>5</option><option>6</option>
-              <option>8</option><option>10</option><option>12</option>
+              <option>3</option><option>4</option><option>5</option>
+              <option>6</option><option>8</option>
+              <option>10</option><option>12</option>
             </select>
           </div>
         </div>
@@ -181,6 +244,7 @@ td.sell{color:var(--danger);font-weight:700;}
 
       <div class="card">
         <div id="resultArea" class="resultArea">No signals yet — press Generate Signals.</div>
+
         <div class="actions">
           <button class="copyBtn" onclick="copyForTelegram()">Copy For Telegram</button>
           <button class="ghost" onclick="clearResult()">Clear</button>
@@ -195,107 +259,131 @@ td.sell{color:var(--danger);font-weight:700;}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-const pad = n => String(n).padStart(2,'0');
+const pad=n=>String(n).padStart(2,'0');
 
-const ctx = document.getElementById('priceChart').getContext('2d');
-const chartData = {labels:[], datasets:[{label:'Price', data:[], borderColor:'#00ffd1', backgroundColor:'rgba(0,255,209,0.2)', tension:0.3}]};
-const priceChart = new Chart(ctx,{type:'line',data:chartData,options:{animation:false,responsive:true,scales:{x:{display:true},y:{display:true}},plugins:{legend:{display:false}}}});
+const ctx=document.getElementById('priceChart').getContext('2d');
+const chartData={labels:[],datasets:[{label:'Price',data:[],borderColor:'#00ffd1',backgroundColor:'rgba(0,255,209,0.2)',tension:0.3}]};
+const priceChart=new Chart(ctx,{type:'line',data:chartData,options:{animation:false,responsive:true,plugins:{legend:{display:false}}}});
 
 function addRandomPricePoint(){
-  const now = new Date();
-  const hh = pad(now.getHours()), mm = pad(now.getMinutes()), ss = pad(now.getSeconds());
-  const label = `${hh}:${mm}:${ss}`;
-  const last = chartData.datasets[0].data.slice(-1)[0] || 100;
-  const change = (Math.random()-0.5)*0.5;
-  const newPrice = +(last+change).toFixed(2);
+  const now=new Date();
+  const label=`${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  const last=chartData.datasets[0].data.slice(-1)[0]||100;
+  const newPrice=+(last+(Math.random()-0.5)*0.5).toFixed(2);
+
   chartData.labels.push(label);
   chartData.datasets[0].data.push(newPrice);
-  if(chartData.labels.length>30){ chartData.labels.shift(); chartData.datasets[0].data.shift(); }
+  if(chartData.labels.length>30){
+    chartData.labels.shift();
+    chartData.datasets[0].data.shift();
+  }
   priceChart.update();
 }
 setInterval(addRandomPricePoint,2000);
 addRandomPricePoint();
 
+
 function addMinutesRandom(timeStr,minGap=5,maxGap=9){
-  const [hh,mm] = timeStr.split(':').map(Number);
-  const d=new Date(); d.setHours(hh,mm,0,0);
-  const gap = Math.floor(Math.random()*(maxGap-minGap+1))+minGap;
+  const [hh,mm]=timeStr.split(':').map(Number);
+  const d=new Date();
+  d.setHours(hh,mm,0,0);
+  const gap=Math.floor(Math.random()*(maxGap-minGap+1))+minGap;
   d.setMinutes(d.getMinutes()+gap);
   return pad(d.getHours())+':'+pad(d.getMinutes());
 }
 
+
 function generateSignals(){
-  const pairSelect = document.getElementById('pair');
-  const selectedPairs = Array.from(pairSelect.selectedOptions).map(o=>o.value);
-  if(selectedPairs.length===0){ alert('Select at least one pair'); return; }
-  const strategy = document.getElementById('strategy').value;
-  const count = parseInt(document.getElementById('count').value) || 3;
-  let curTime = document.getElementById('startTime').value;
-  if(!curTime){ alert('Select a start time.'); return; }
-  const signals = [];
+  const pairs=Array.from(document.getElementById('pair').selectedOptions).map(o=>o.value);
+  if(!pairs.length) return alert('Select at least one pair');
+
+  const strategy=document.getElementById('strategy').value;
+  const count=parseInt(document.getElementById('count').value);
+  let curTime=document.getElementById('startTime').value;
+  if(!curTime) return alert('Select a start time');
+
+  const signals=[];
 
   if(strategy==='Reversal Hunter'){
-    const half = Math.floor(count/2), extra = count%2;
+    const half=Math.floor(count/2),extra=count%2;
     let types=[];
-    for(let i=0;i<half;i++){types.push('BUY','SELL');}
-    if(extra>0) types.push(Math.random()>0.5?'BUY':'SELL');
+    for(let i=0;i<half;i++) types.push('BUY','SELL');
+    if(extra) types.push(Math.random()>0.5?'BUY':'SELL');
     types.sort(()=>Math.random()-0.5);
+
     for(let i=0;i<count;i++){
-      if(i>0) curTime=addMinutesRandom(curTime,5,9);
-      const pair = selectedPairs[i % selectedPairs.length];
-      signals.push({id:i+1, pair, time:curTime, type:types[i]});
+      if(i>0) curTime=addMinutesRandom(curTime);
+      signals.push({id:i+1,pair:pairs[i%pairs.length],time:curTime,type:types[i]});
     }
+
   } else {
     for(let i=0;i<count;i++){
-      if(i>0) curTime=addMinutesRandom(curTime,5,9);
-      const pair = selectedPairs[i % selectedPairs.length];
-      const type=Math.random()>0.5?'BUY':'SELL';
-      signals.push({id:i+1, pair, time:curTime, type});
+      if(i>0) curTime=addMinutesRandom(curTime);
+      signals.push({id:i+1,pair:pairs[i%pairs.length],time:curTime,type:Math.random()>0.5?'BUY':'SELL'});
     }
   }
-  window.generatedSignals = signals;
+
+  window.generatedSignals=signals;
   renderSignals(signals);
   showTelegramNotification();
 }
 
-function renderSignals(signals){
-  if(!signals||signals.length===0){ document.getElementById('resultArea').innerHTML='No signals generated.'; return; }
+
+function renderSignals(data){
   let html='<table><thead><tr><th>#</th><th>PAIR</th><th>TIME</th><th>SIGNAL</th></tr></thead><tbody>';
-  signals.forEach(s=>html+=`<tr><td>${s.id}</td><td>${s.pair}</td><td>${s.time}</td><td class="${s.type==='BUY'?'buy':'sell'}">${s.type}</td></tr>`);
+
+  data.forEach(s=>{
+    html+=`<tr>
+      <td>${s.id}</td>
+      <td>${s.pair}</td>
+      <td>${s.time}</td>
+      <td class="${s.type==='BUY'?'buy':'sell'}">${s.type}</td>
+    </tr>`;
+  });
+
   html+='</tbody></table>';
   document.getElementById('resultArea').innerHTML=html;
-  document.getElementById('resultArea').scrollTop=document.getElementById('resultArea').scrollHeight;
 }
+
 
 function clearResult(){
-  document.getElementById('resultArea').innerHTML='No signals yet — press Generate Signals.';
-  window.generatedSignals = null;
+  document.getElementById('resultArea').innerHTML="No signals yet — press Generate Signals.";
+  window.generatedSignals=null;
 }
+
 
 function copyForTelegram(){
-  const signals = window.generatedSignals;
-  if(!signals||signals.length===0){ alert('Generate signals first'); return; }
-  const header='💥 HIGH ACURANCY⚡️\n\n⚙️FUTURE SIGNAL ⚙️\n\n‼️1 Min Trade — 1 Step MTG\n⚡️ USE SAFETY FOR BETTER ACCURACY ⚡️\n\n🔔 USE BDT TIMEZONE\n';
+  if(!window.generatedSignals) return alert('Generate signals first');
+
+  const header='💥 HIGH ACURANCY⚡️\n\n⚙️FUTURE SIGNAL ⚙️\n\n‼️1 Min Trade — 1 Step MTG\n⚡️ USE SAFETY FOR BETTER ACCURACY ⚡️\n\n🔔 USE BDT TIMEZONE\n';
   let lines=[header];
-  signals.forEach(s=>lines.push(`${s.time} – ${s.pair} – ${s.type}`));
+
+  window.generatedSignals.forEach(s=>{
+    lines.push(`${s.time} – ${s.pair} – ${s.type}`);
+  });
+
   lines.push('\nFor Any Question:\n@TraderParvej');
-  navigator.clipboard.writeText(lines.join('\n')).then(()=>showCopyNotification());
+
+  navigator.clipboard.writeText(lines.join('\n'));
+  showCopyNotification();
 }
 
+
 function showTelegramNotification(){
-  const notif=document.getElementById('telegramNotification');
-  notif.innerHTML=`<strong>Join My Telegram Channel</strong><br><a href="https://t.me/TraderParvej_Community" target="_blank">https://t.me/TraderParvej_Community</a>`;
-  notif.classList.add('show');
-  notif.onclick=()=>window.open('https://t.me/TraderParvej_Community','_blank');
-  setTimeout(()=>{notif.classList.remove('show');},9000);
+  const box=document.getElementById('telegramNotification');
+  box.innerHTML=`<strong>Join Telegram Channel</strong><br><a href="https://t.me/TraderParvej_Community">Tap Here</a>`;
+  box.classList.add('show');
+  box.onclick=()=>window.open('https://t.me/TraderParvej_Community','_blank');
+  setTimeout(()=>box.classList.remove('show'),6500);
 }
 
 function showCopyNotification(){
-  const notif=document.getElementById('telegramNotification');
-  notif.innerHTML=`✅ Copied to Clipboard`;
-  notif.classList.add('show');
-  setTimeout(()=>{notif.classList.remove('show');},2500);
+  const box=document.getElementById('telegramNotification');
+  box.innerHTML=`✅ Copied Successfully!`;
+  box.classList.add('show');
+  setTimeout(()=>box.classList.remove('show'),2500);
 }
 </script>
+
 </body>
 </html>
